@@ -2,5 +2,6 @@
   "settings": "settings",
   "@settings": {
     "description": "The settings"
-  }
+  },
+  "musicresource":"Musice resource"
 }
