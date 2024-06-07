@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'repository/MusicRepoList.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({Key? key});
@@ -13,7 +14,12 @@ class SettingsPage extends StatelessWidget {
       body: ListView(
         children: <Widget>[
           _buildSettingItem(context, Icons.add_home_outlined,
-              AppLocalizations.of(context)!.musicresource),
+              AppLocalizations.of(context)!.musicresource, onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MusicRepoList()),
+            );
+          }),
           _buildSettingItem(context, Icons.language, "Language"),
           _buildSettingItem(context, Icons.notifications, "Notifications"),
           _buildGroupDivider(),
@@ -38,14 +44,12 @@ class SettingsPage extends StatelessWidget {
   }
 
   Widget _buildSettingItem(BuildContext context, IconData icon, String title,
-      {IconData trailingIcon = Icons.arrow_forward_ios}) {
+      {IconData trailingIcon = Icons.arrow_forward_ios, VoidCallback? onTap}) {
     return ListTile(
       leading: Icon(icon),
       title: Text(title),
       trailing: Icon(trailingIcon),
-      onTap: () {
-        // Add your action here
-      },
+      onTap: onTap,
     );
   }
 

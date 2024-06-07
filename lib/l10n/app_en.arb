@@ -3,5 +3,6 @@
   "@settings": {
     "description": "The settings"
   },
-  "musicresource":"Musice resource"
+  "musicresource":"Musice resource",
+  "musicResConfig":"Musice resource config"
 }
