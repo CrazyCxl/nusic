@@ -15,10 +15,7 @@ class TabBarDemo extends StatelessWidget {
       home: DefaultTabController(
         length: 3,
         child: Scaffold(
-          appBar: AppBar(
-            title:
-                null, // You can set title to null if you don't want any title
-          ),
+          appBar: null,
           body: TabBarView(
             children: [
               HomePage(),
