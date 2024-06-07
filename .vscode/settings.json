@@ -1,0 +1,16 @@
+{
+    "files.exclude": {
+        "**/.dart_tool/": true,
+        ".idea": true,
+        "ios": true,
+        "linux": true,
+        ".flutter*": true,
+        "macos*": true,
+        "web": true,
+        ".metadata": true,
+        "analysis_options*": true,
+        "nusic.iml": true,
+        "pubspec.lock": true,
+        "**/build/": true
+    }
+}
