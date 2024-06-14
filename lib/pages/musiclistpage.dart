@@ -77,7 +77,7 @@ class _MusicListPageState extends State<MusicListPage> {
         './local/',
         'sync.ffs_db',
         'smb://10.0.2.2/share/music/sync.ffs_db',
-        'DESKTOP-CXL-PC',
+        '',
         'cxl',
         '123',
       );

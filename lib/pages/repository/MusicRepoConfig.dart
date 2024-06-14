@@ -13,6 +13,7 @@ class MusicRepoConfig extends StatefulWidget {
 
 class _MusicRepoConfigState extends State<MusicRepoConfig> {
   late TextEditingController nameController;
+  late TextEditingController pathController;
   late TextEditingController ipController;
   late TextEditingController usernameController;
   late TextEditingController passwordController;
@@ -24,6 +25,7 @@ class _MusicRepoConfigState extends State<MusicRepoConfig> {
     super.initState();
     _repoinfo = widget.initialRepo ?? Repoinfo(type: RepoType.SMB);
     nameController = TextEditingController(text: _repoinfo.name);
+    pathController = TextEditingController(text: _repoinfo.path);
     ipController = TextEditingController(text: _repoinfo.ip);
     usernameController = TextEditingController(text: _repoinfo.username);
     passwordController = TextEditingController(text: _repoinfo.password);
@@ -32,6 +34,7 @@ class _MusicRepoConfigState extends State<MusicRepoConfig> {
   @override
   void dispose() {
     nameController.dispose();
+    pathController.dispose();
     ipController.dispose();
     usernameController.dispose();
     passwordController.dispose();
@@ -53,10 +56,11 @@ class _MusicRepoConfigState extends State<MusicRepoConfig> {
               value: _repoinfo.type == RepoType.SMB ? 'SMB' : 'Local',
               onChanged: (value) {
                 setState(() {
-                  if (value == "SMB")
+                  if (value == "SMB") {
                     _repoinfo.type = RepoType.SMB;
-                  else
+                  } else {
                     _repoinfo.type = RepoType.LOCAL;
+                  }
                 });
               },
               items: ['SMB', 'Local']
@@ -80,6 +84,18 @@ class _MusicRepoConfigState extends State<MusicRepoConfig> {
               },
               decoration: InputDecoration(
                 labelText: 'Name',
+              ),
+            ),
+            SizedBox(height: 16.0),
+            TextFormField(
+              controller: pathController,
+              onChanged: (value) {
+                setState(() {
+                  _repoinfo.path = value;
+                });
+              },
+              decoration: InputDecoration(
+                labelText: 'Path',
               ),
             ),
             if (_repoinfo.type == RepoType.SMB) ...[
