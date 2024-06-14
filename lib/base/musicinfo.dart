@@ -7,7 +7,7 @@ class Musicinfo {
 
   Musicinfo({
     required this.name,
-    required this.artist,
-    required this.album,
+    this.artist = '',
+    this.album = '',
   });
 }

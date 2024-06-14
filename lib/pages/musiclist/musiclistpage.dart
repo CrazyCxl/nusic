@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:samba_browser/samba_browser.dart';
-import '../base/musicinfo.dart';
+import '../../base/musicinfo.dart';
+import './sourcemanager.dart';
 
 class MusicListPage extends StatefulWidget {
   @override
@@ -11,64 +12,19 @@ class _MusicListPageState extends State<MusicListPage> {
   List<Musicinfo> m_musicInfos = [];
   bool _loadingShares = true;
   String _downloadStatus = '';
-
+  SourceManager sourceManager = SourceManager.instance;
   @override
   void initState() {
     super.initState();
-    _fetchShareList();
+    _loadMusicList();
   }
 
-  List<Musicinfo> loadMusicInfos(List<String> urls) {
-    // Define the supported music extensions
-    final supportedExtensions = ['mp3', 'flac'];
-    List<Musicinfo> musicInfos = [];
-
-    for (var share in urls) {
-      // Get the file extension
-      String extension = share.split('.').last;
-
-      // Check if the file is a supported music file
-      if (supportedExtensions.contains(extension.toLowerCase())) {
-        // Assuming the share name is the file name
-        String name = share.split('/').last.split('.').first;
-        // You can set artist and album as empty strings for now, since this information might not be available
-        String artist = "";
-        String album = "";
-
-        // Create a Musicinfo instance and set the URL
-        Musicinfo musicInfo = Musicinfo(
-          name: name,
-          artist: artist,
-          album: album,
-        );
-        musicInfo.url = share;
-
-        // Add the instance to the list
-        musicInfos.add(musicInfo);
-      }
-    }
-    return musicInfos;
-  }
-
-  Future<void> _fetchShareList() async {
-    try {
-      final shares = await SambaBrowser.getShareList(
-        'smb://10.0.2.2/share/music/',
-        '',
-        'cxl',
-        '123',
-      );
-      List<Musicinfo> infos = loadMusicInfos(shares.cast<String>());
-      setState(() {
-        m_musicInfos = infos;
-        _loadingShares = false;
-      });
-    } catch (e) {
-      print('Error fetching share list: $e');
-      setState(() {
-        _loadingShares = false;
-      });
-    }
+  Future<void> _loadMusicList() async {
+    List<Musicinfo> loadedList = await sourceManager.loadMusicInfoList();
+    setState(() {
+      m_musicInfos = loadedList;
+      _loadingShares = false;
+    });
   }
 
   Future<void> _downloadFile() async {
@@ -102,7 +58,7 @@ class _MusicListPageState extends State<MusicListPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _loadingShares
-                ? CircularProgressIndicator()
+                ? Center(child: CircularProgressIndicator())
                 : Expanded(
                     child: ListView.builder(
                       itemCount: m_musicInfos.length,

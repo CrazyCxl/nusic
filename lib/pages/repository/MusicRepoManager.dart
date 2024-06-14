@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../base/repoinfo.dart';
+import '../musiclist/sourcemanager.dart';
 
 class MusicRepoManager {
   // 私有静态实例
@@ -49,6 +50,7 @@ class MusicRepoManager {
         musicRepoList.map((item) => jsonEncode(item.toJson())).toList();
     await prefs.setString(_keyMusicRepoList, jsonEncode(encodedList));
     _cachedMusicRepoList = List.from(musicRepoList); // 更新缓存的数据
+    await SourceManager.instance.initializeMusicInfoList();
   }
 
   Future<void> addRepo(Repoinfo repo) async {
