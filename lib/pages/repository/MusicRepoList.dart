@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:nusic/pages/repository/MusicRepoConfig.dart';
 import '../../base/repoinfo.dart';
+import 'MusicRepoConfig.dart';
 
-class MusicRepoList extends StatelessWidget {
+class MusicRepoList extends StatefulWidget {
   MusicRepoList({Key? key}) : super(key: key);
 
-  final List<Repoinfo> musicRepoList = [
-    Repoinfo(name: 'Repo 1', url: 'url1'),
-    Repoinfo(name: 'Repo 2', url: 'url2'),
-    Repoinfo(name: 'Repo 3', url: 'url3'),
-    // Add more repositories as needed...
+  @override
+  _MusicRepoListState createState() => _MusicRepoListState();
+}
+
+class _MusicRepoListState extends State<MusicRepoList> {
+  List<Repoinfo> musicRepoList = [
+    Repoinfo(name: 'Repo 1', url: 'url1', type: RepoType.SMB),
+    Repoinfo(name: 'Repo 2', url: 'url2', type: RepoType.LOCAL),
+    Repoinfo(name: 'Repo 3', url: 'url3', type: RepoType.SMB),
   ];
 
   @override
@@ -21,11 +25,16 @@ class MusicRepoList extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(Icons.add),
-            onPressed: () {
-              Navigator.push(
+            onPressed: () async {
+              final Repoinfo? result = await Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => MusicRepoConfig()),
               );
+              if (result != null) {
+                setState(() {
+                  musicRepoList.add(result);
+                });
+              }
             },
           ),
         ],
@@ -39,21 +48,30 @@ class MusicRepoList extends StatelessWidget {
         ),
         itemCount: musicRepoList.length,
         itemBuilder: (BuildContext context, int index) {
-          return _buildMusicRepoCard(context, musicRepoList[index]);
+          return _buildMusicRepoCard(context, musicRepoList[index], index);
         },
       ),
     );
   }
 
-  Widget _buildMusicRepoCard(BuildContext context, Repoinfo repo) {
+  Widget _buildMusicRepoCard(BuildContext context, Repoinfo repo, int index) {
     return Card(
       elevation: 4.0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: InkWell(
-        onTap: () {
-          // Add your action here
+        onTap: () async {
+          final Repoinfo? result = await Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MusicRepoConfig(initialRepo: repo)),
+          );
+          if (result != null) {
+            setState(() {
+              musicRepoList[index] = result;
+            });
+          }
         },
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

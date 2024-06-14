@@ -3,18 +3,40 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../base/repoinfo.dart';
 
 class MusicRepoConfig extends StatefulWidget {
-  MusicRepoConfig({Key? key}) : super(key: key);
+  final Repoinfo? initialRepo;
+
+  MusicRepoConfig({Key? key, this.initialRepo}) : super(key: key);
 
   @override
   _MusicRepoConfigState createState() => _MusicRepoConfigState();
 }
 
 class _MusicRepoConfigState extends State<MusicRepoConfig> {
-  String _selectedType = 'SMB';
-  String _name = '';
-  String _ipAddress = '';
-  String _username = '';
-  String _password = '';
+  late TextEditingController nameController;
+  late TextEditingController ipController;
+  late TextEditingController usernameController;
+  late TextEditingController passwordController;
+
+  late Repoinfo _repoinfo;
+
+  @override
+  void initState() {
+    super.initState();
+    _repoinfo = widget.initialRepo ?? Repoinfo(type: RepoType.SMB);
+    nameController = TextEditingController(text: _repoinfo.name);
+    ipController = TextEditingController(text: _repoinfo.ip);
+    usernameController = TextEditingController(text: _repoinfo.username);
+    passwordController = TextEditingController(text: _repoinfo.password);
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    ipController.dispose();
+    usernameController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,10 +50,13 @@ class _MusicRepoConfigState extends State<MusicRepoConfig> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             DropdownButtonFormField<String>(
-              value: _selectedType,
+              value: _repoinfo.type == RepoType.SMB ? 'SMB' : 'Local',
               onChanged: (value) {
                 setState(() {
-                  _selectedType = value!;
+                  if (value == "SMB")
+                    _repoinfo.type = RepoType.SMB;
+                  else
+                    _repoinfo.type = RepoType.LOCAL;
                 });
               },
               items: ['SMB', 'Local']
@@ -47,21 +72,23 @@ class _MusicRepoConfigState extends State<MusicRepoConfig> {
             ),
             SizedBox(height: 16.0),
             TextFormField(
+              controller: nameController,
               onChanged: (value) {
                 setState(() {
-                  _name = value;
+                  _repoinfo.name = value;
                 });
               },
               decoration: InputDecoration(
                 labelText: 'Name',
               ),
             ),
-            if (_selectedType == 'SMB') ...[
+            if (_repoinfo.type == RepoType.SMB) ...[
               SizedBox(height: 16.0),
               TextFormField(
+                controller: ipController,
                 onChanged: (value) {
                   setState(() {
-                    _ipAddress = value;
+                    _repoinfo.ip = value;
                   });
                 },
                 decoration: InputDecoration(
@@ -70,9 +97,10 @@ class _MusicRepoConfigState extends State<MusicRepoConfig> {
               ),
               SizedBox(height: 16.0),
               TextFormField(
+                controller: usernameController,
                 onChanged: (value) {
                   setState(() {
-                    _username = value;
+                    _repoinfo.username = value;
                   });
                 },
                 decoration: InputDecoration(
@@ -81,9 +109,10 @@ class _MusicRepoConfigState extends State<MusicRepoConfig> {
               ),
               SizedBox(height: 16.0),
               TextFormField(
+                controller: passwordController,
                 onChanged: (value) {
                   setState(() {
-                    _password = value;
+                    _repoinfo.password = value;
                   });
                 },
                 decoration: InputDecoration(
@@ -94,7 +123,7 @@ class _MusicRepoConfigState extends State<MusicRepoConfig> {
             SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
-                // Add your action here
+                Navigator.pop(context, _repoinfo);
               },
               child: Text('Save'),
             ),
