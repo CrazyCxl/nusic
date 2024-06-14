@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../../base/repoinfo.dart';
-import 'MusicRepoConfig.dart';
+import 'package:nusic/pages/repository/MusicRepoConfig.dart';
+import 'package:nusic/base/repoinfo.dart';
+import './MusicRepoManager.dart';
 
 class MusicRepoList extends StatefulWidget {
   MusicRepoList({Key? key}) : super(key: key);
@@ -11,11 +12,26 @@ class MusicRepoList extends StatefulWidget {
 }
 
 class _MusicRepoListState extends State<MusicRepoList> {
-  List<Repoinfo> musicRepoList = [
-    Repoinfo(name: 'Repo 1', url: 'url1', type: RepoType.SMB),
-    Repoinfo(name: 'Repo 2', url: 'url2', type: RepoType.LOCAL),
-    Repoinfo(name: 'Repo 3', url: 'url3', type: RepoType.SMB),
-  ];
+  late MusicRepoManager _repoRepository;
+  List<Repoinfo> musicRepoList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _repoRepository = MusicRepoManager.instance;
+    _loadMusicRepoList();
+  }
+
+  Future<void> _loadMusicRepoList() async {
+    List<Repoinfo> loadedList = await _repoRepository.loadMusicRepoList();
+    setState(() {
+      musicRepoList = loadedList;
+    });
+  }
+
+  Future<void> _saveMusicRepoList() async {
+    await _repoRepository.saveMusicRepoList(musicRepoList);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +49,7 @@ class _MusicRepoListState extends State<MusicRepoList> {
               if (result != null) {
                 setState(() {
                   musicRepoList.add(result);
+                  _saveMusicRepoList(); // Save list after adding new item
                 });
               }
             },
@@ -70,6 +87,7 @@ class _MusicRepoListState extends State<MusicRepoList> {
           if (result != null) {
             setState(() {
               musicRepoList[index] = result;
+              _saveMusicRepoList(); // Save list after editing item
             });
           }
         },
