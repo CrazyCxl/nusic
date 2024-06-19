@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '/pages/home.dart';
+import './pages/playpage/MusicPlayPage.dart';
 import 'pages/musiclist/musiclistpage.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -24,7 +25,7 @@ class TabBarDemo extends StatelessWidget {
             children: [
               HomePage(),
               MusicListPage(),
-              Icon(Icons.directions_bike),
+              MusicPlayPage(),
             ],
           ),
           bottomNavigationBar: const TabBar(
