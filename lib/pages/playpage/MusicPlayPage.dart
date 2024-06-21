@@ -15,61 +15,57 @@ class _MusicPlayPageState extends State<MusicPlayPage> {
 
   @override
   Widget build(BuildContext context) {
-    var musicProvider = Provider.of<MusicProvider>(context);
-    var selectedMusic = musicProvider.selectedMusic;
-
     return Scaffold(
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverAppBar(
-            expandedHeight: 250.0,
-            pinned: true,
-            floating: true,
-            flexibleSpace: FlexibleSpaceBar(
-              title: Text(
-                  selectedMusic != null ? selectedMusic.name : 'Music Player'),
-              background: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _isPlaying = !_isPlaying;
-                  });
-                  // 在这里处理播放/暂停逻辑
-                },
-                child: Image.network(
-                  'https://via.placeholder.com/400x200',
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ),
-          SliverList(
-            delegate: SliverChildListDelegate(
-              [
-                Container(
-                  height: 400.0, // 用于测试滚动效果，实际根据内容调整
-                  child: ListView.builder(
-                    itemCount: musicProvider.musicInfos.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        leading: CircleAvatar(
-                          child: Text((index + 1).toString()),
-                        ),
-                        title: Text(musicProvider.musicInfos[index].name),
-                        subtitle: Text(musicProvider.musicInfos[index].artist),
-                        // 添加点击事件以播放对应歌曲
-                        onTap: () {
-                          musicProvider
-                              .selectMusic(musicProvider.musicInfos[index]);
-                          // 在这里处理点击播放列表中歌曲的逻辑
-                        },
-                      );
+      body: Consumer<MusicProvider>(
+        builder: (context, musicProvider, child) {
+          var selectedMusic = musicProvider.selectedMusic;
+          return CustomScrollView(
+            slivers: <Widget>[
+              SliverAppBar(
+                expandedHeight: 250.0,
+                pinned: true,
+                floating: true,
+                flexibleSpace: FlexibleSpaceBar(
+                  title: Text(selectedMusic != null
+                      ? selectedMusic.name
+                      : 'Music Player'),
+                  background: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _isPlaying = !_isPlaying;
+                      });
+                      // 在这里处理播放/暂停逻辑
                     },
+                    child: Image.network(
+                      'https://via.placeholder.com/400x200',
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
-              ],
-            ),
-          ),
-        ],
+              ),
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                    var musicInfo = musicProvider.musicInfos[index];
+                    return ListTile(
+                      leading: CircleAvatar(
+                        child: Text((index + 1).toString()),
+                      ),
+                      title: Text(musicInfo.name),
+                      subtitle: Text(musicInfo.artist),
+                      // 添加点击事件以播放对应歌曲
+                      onTap: () {
+                        musicProvider.selectMusic(musicInfo);
+                        // 在这里处理点击播放列表中歌曲的逻辑
+                      },
+                    );
+                  },
+                  childCount: musicProvider.musicInfos.length,
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
