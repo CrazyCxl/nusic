@@ -47,7 +47,7 @@ class _MusicRepoConfigState extends State<MusicRepoConfig> {
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.musicResConfig),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
