@@ -1,4 +1,8 @@
+// musicplaypage.dart
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../base/musicinfo.dart';
+import '../../core/MusicProvider.dart';
 
 class MusicPlayPage extends StatefulWidget {
   @override
@@ -11,6 +15,9 @@ class _MusicPlayPageState extends State<MusicPlayPage> {
 
   @override
   Widget build(BuildContext context) {
+    var musicProvider = Provider.of<MusicProvider>(context);
+    var selectedMusic = musicProvider.selectedMusic;
+
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
@@ -19,7 +26,8 @@ class _MusicPlayPageState extends State<MusicPlayPage> {
             pinned: true,
             floating: true,
             flexibleSpace: FlexibleSpaceBar(
-              title: Text('Music Player'),
+              title: Text(
+                  selectedMusic != null ? selectedMusic.name : 'Music Player'),
               background: GestureDetector(
                 onTap: () {
                   setState(() {
@@ -40,16 +48,18 @@ class _MusicPlayPageState extends State<MusicPlayPage> {
                 Container(
                   height: 400.0, // 用于测试滚动效果，实际根据内容调整
                   child: ListView.builder(
-                    itemCount: 20, // 假设有20首歌曲
+                    itemCount: musicProvider.musicInfos.length,
                     itemBuilder: (context, index) {
                       return ListTile(
                         leading: CircleAvatar(
                           child: Text((index + 1).toString()),
                         ),
-                        title: Text('Song Title $index'),
-                        subtitle: Text('Artist Name'),
+                        title: Text(musicProvider.musicInfos[index].name),
+                        subtitle: Text(musicProvider.musicInfos[index].artist),
                         // 添加点击事件以播放对应歌曲
                         onTap: () {
+                          musicProvider
+                              .selectMusic(musicProvider.musicInfos[index]);
                           // 在这里处理点击播放列表中歌曲的逻辑
                         },
                       );

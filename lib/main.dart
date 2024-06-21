@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
-import '/pages/home.dart';
-import './pages/playpage/MusicPlayPage.dart';
+import 'package:provider/provider.dart';
+import 'core/MusicProvider.dart';
+import 'pages/home.dart';
+import 'pages/playpage/MusicPlayPage.dart';
 import 'pages/musiclist/musiclistpage.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() {
-  runApp(const TabBarDemo());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => MusicProvider(),
+      child: const TabBarDemo(),
+    ),
+  );
 }
 
 class TabBarDemo extends StatelessWidget {
