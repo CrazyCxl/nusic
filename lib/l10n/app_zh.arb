@@ -1,5 +1,7 @@
 {
   "settings": "设置",
   "musicresource":"音乐源",
-  "musicResConfig":"配置音乐源"
+  "musicResConfig":"配置音乐源",
+  "store":"存储",
+  "storeConfig":"存储配置"
 }

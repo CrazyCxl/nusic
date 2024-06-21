@@ -1,3 +1,5 @@
+import './repoinfo.dart';
+
 class Musicinfo {
   String name;
   String artist;
@@ -5,9 +7,12 @@ class Musicinfo {
   int duration = 0; // Duration in seconds
   String url = ""; // URL to the music file
 
+  Repoinfo repo;
+
   Musicinfo({
     required this.name,
     this.artist = '',
     this.album = '',
-  });
+    Repoinfo? repo,
+  }) : repo = repo ?? Repoinfo(type: RepoType.LOCAL);
 }

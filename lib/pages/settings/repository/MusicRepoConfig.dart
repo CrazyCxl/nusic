@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../../base/repoinfo.dart';
+import '../../../base/repoinfo.dart';
 
 class MusicRepoConfig extends StatefulWidget {
   final Repoinfo? initialRepo;

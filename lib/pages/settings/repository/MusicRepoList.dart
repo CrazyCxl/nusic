@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:nusic/pages/repository/MusicRepoConfig.dart';
+import './MusicRepoConfig.dart';
 import 'package:nusic/base/repoinfo.dart';
 import './MusicRepoManager.dart';
 

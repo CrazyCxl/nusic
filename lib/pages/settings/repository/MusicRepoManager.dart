@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../base/repoinfo.dart';
-import '../musiclist/sourcemanager.dart';
+import '../../../base/repoinfo.dart';
+import '../../musiclist/sourcemanager.dart';
 
 class MusicRepoManager {
   // 私有静态实例

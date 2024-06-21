@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'repository/MusicRepoList.dart';
+import './StorageConfigPage.dart'; // Import the storage configuration page
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({Key? key});
@@ -20,8 +21,14 @@ class SettingsPage extends StatelessWidget {
               MaterialPageRoute(builder: (context) => MusicRepoList()),
             );
           }),
+          _buildSettingItem(context, Icons.store_outlined,
+              AppLocalizations.of(context)!.store, onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => StorageConfigPage()),
+            );
+          }),
           _buildSettingItem(context, Icons.language, "Language"),
-          _buildSettingItem(context, Icons.notifications, "Notifications"),
           _buildGroupDivider(),
           _buildSettingItem(context, Icons.person, "Profile"),
           _buildSettingItem(context, Icons.security, "Security"),

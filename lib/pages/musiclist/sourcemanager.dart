@@ -1,6 +1,6 @@
 import '../../base/musicinfo.dart';
 import '../../base/repoinfo.dart';
-import '../repository/MusicRepoManager.dart';
+import '../settings/repository/MusicRepoManager.dart';
 import 'package:samba_browser/samba_browser.dart';
 
 class SourceManager {

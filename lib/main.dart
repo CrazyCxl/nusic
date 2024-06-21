@@ -5,6 +5,7 @@ import 'pages/home.dart';
 import 'pages/playpage/MusicPlayPage.dart';
 import 'pages/musiclist/musiclistpage.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'core/MusicDownloader.dart';
 
 void main() {
   runApp(
@@ -15,8 +16,18 @@ void main() {
   );
 }
 
-class TabBarDemo extends StatelessWidget {
-  const TabBarDemo({super.key});
+class TabBarDemo extends StatefulWidget {
+  const TabBarDemo({Key? key}) : super(key: key);
+
+  @override
+  _TabBarDemoState createState() => _TabBarDemoState();
+}
+
+class _TabBarDemoState extends State<TabBarDemo> {
+  @override
+  void initState() {
+    MusicDownloader.instance.init();
+  }
 
   @override
   Widget build(BuildContext context) {

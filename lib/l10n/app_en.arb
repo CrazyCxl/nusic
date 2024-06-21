@@ -4,5 +4,7 @@
     "description": "The settings"
   },
   "musicresource":"Musice resource",
-  "musicResConfig":"Musice resource config"
+  "musicResConfig":"Musice resource config",
+  "store":"Store",
+  "storeConfig":"Storage Configuration"
 }
