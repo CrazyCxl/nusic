@@ -1,4 +1,3 @@
-// musicplaypage.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../base/musicinfo.dart';
@@ -47,12 +46,15 @@ class _MusicPlayPageState extends State<MusicPlayPage> {
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
                     var musicInfo = musicProvider.musicInfos[index];
+                    bool isSelected = selectedMusic == musicInfo;
                     return ListTile(
                       leading: CircleAvatar(
                         child: Text((index + 1).toString()),
                       ),
                       title: Text(musicInfo.name),
                       subtitle: Text(musicInfo.artist),
+                      selected: isSelected,
+                      selectedTileColor: Colors.blue.withOpacity(0.1),
                       // 添加点击事件以播放对应歌曲
                       onTap: () {
                         musicProvider.selectMusic(musicInfo);
