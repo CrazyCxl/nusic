@@ -10,7 +10,6 @@ class MusicPlayPage extends StatefulWidget {
 
 class _MusicPlayPageState extends State<MusicPlayPage> {
   bool _isPlaying = false; // 是否正在播放
-  double _progress = 0.5; // 播放进度，默认为50%
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +17,7 @@ class _MusicPlayPageState extends State<MusicPlayPage> {
       body: Consumer<MusicProvider>(
         builder: (context, musicProvider, child) {
           var selectedMusic = musicProvider.selectedMusic;
+
           return CustomScrollView(
             slivers: <Widget>[
               SliverAppBar(
@@ -47,6 +47,9 @@ class _MusicPlayPageState extends State<MusicPlayPage> {
                   (BuildContext context, int index) {
                     var musicInfo = musicProvider.musicInfos[index];
                     bool isSelected = selectedMusic == musicInfo;
+                    bool isDownloading =
+                        musicProvider.downloading[musicInfo.name] ?? false;
+
                     return ListTile(
                       leading: CircleAvatar(
                         child: Text((index + 1).toString()),
@@ -55,10 +58,10 @@ class _MusicPlayPageState extends State<MusicPlayPage> {
                       subtitle: Text(musicInfo.artist),
                       selected: isSelected,
                       selectedTileColor: Colors.blue.withOpacity(0.1),
-                      // 添加点击事件以播放对应歌曲
-                      onTap: () {
-                        musicProvider.selectMusic(musicInfo);
-                        // 在这里处理点击播放列表中歌曲的逻辑
+                      trailing:
+                          isDownloading ? CircularProgressIndicator() : null,
+                      onTap: () async {
+                        await musicProvider.play(context, musicInfo);
                       },
                     );
                   },

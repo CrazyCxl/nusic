@@ -43,15 +43,11 @@ class SourceManager {
       repo.username,
       repo.password,
     );
-    List<Musicinfo> infos = _loadMusicInfosFromUrls(shares.cast<String>());
-    return infos;
-  }
 
-  List<Musicinfo> _loadMusicInfosFromUrls(List<String> urls) {
-    // Define the supported music extensions
-    final supportedExtensions = ['mp3', 'flac'];
+    final supportedExtensions = ['mp3', 'flac', 'wav'];
     List<Musicinfo> musicInfos = [];
 
+    List<String> urls = shares.cast<String>();
     for (var share in urls) {
       // Get the file extension
       String extension = share.split('.').last;
@@ -66,11 +62,7 @@ class SourceManager {
 
         // Create a Musicinfo instance and set the URL
         Musicinfo musicInfo = Musicinfo(
-          name: name,
-          artist: artist,
-          album: album,
-        );
-        musicInfo.url = share;
+            name: name, artist: artist, album: album, url: share, repo: repo);
 
         // Add the instance to the list
         musicInfos.add(musicInfo);

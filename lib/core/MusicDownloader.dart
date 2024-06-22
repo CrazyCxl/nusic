@@ -32,17 +32,16 @@ class MusicDownloader {
     await _manageCache();
   }
 
-  Future<String?> downloadMusic(Musicinfo musicInfo,
-      {Function(double)? onProgress}) async {
+  Future<String?> downloadMusic(Musicinfo musicInfo) async {
     if (cacheDirectory.isEmpty) {
       await init();
     }
 
     String fileName = Uri.parse(musicInfo.url).pathSegments.last;
-    String savePath = '$cacheDirectory/${musicInfo.name}.mp3';
+    String savePath = '$cacheDirectory/';
 
     // Check if the file already exists
-    File file = File(savePath);
+    File file = File(savePath + fileName);
     if (file.existsSync()) {
       return savePath;
     }
@@ -50,6 +49,7 @@ class MusicDownloader {
     // Manage cache size before downloading
     await _manageCache();
 
+    print('Downloading ${musicInfo.url} to $savePath');
     // Perform the download
     try {
       await SambaBrowser.saveFile(

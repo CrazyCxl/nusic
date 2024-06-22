@@ -56,11 +56,11 @@ class _MusicListPageState extends State<MusicListPage> {
                                     .musicInfos[index].artist.isEmpty
                                 ? null
                                 : Text(musicProvider.musicInfos[index].artist),
-                            onTap: () {
-                              musicProvider
-                                  .selectMusic(musicProvider.musicInfos[index]);
+                            onTap: () async {
                               DefaultTabController.of(context)
                                   ?.animateTo(2); // Switch to MusicPlayPage
+                              await musicProvider.play(
+                                  context, musicProvider.musicInfos[index]);
                             },
                           ),
                         );
