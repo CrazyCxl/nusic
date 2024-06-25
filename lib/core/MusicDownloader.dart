@@ -38,10 +38,10 @@ class MusicDownloader {
     }
 
     String fileName = Uri.parse(musicInfo.url).pathSegments.last;
-    String savePath = '$cacheDirectory/';
-
+    String saveDir = '$cacheDirectory/';
+    String savePath = saveDir + fileName;
     // Check if the file already exists
-    File file = File(savePath + fileName);
+    File file = File(savePath);
     if (file.existsSync()) {
       return savePath;
     }
@@ -53,7 +53,7 @@ class MusicDownloader {
     // Perform the download
     try {
       await SambaBrowser.saveFile(
-          savePath,
+          saveDir,
           fileName,
           musicInfo.url,
           '', // Domain if needed

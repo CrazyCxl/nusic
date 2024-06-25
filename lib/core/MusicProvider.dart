@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:audioplayers/audioplayers.dart';
 import '../base/musicinfo.dart';
 import '../core/MusicDownloader.dart';
 
@@ -6,10 +7,35 @@ class MusicProvider with ChangeNotifier {
   List<Musicinfo> _musicInfos = [];
   Musicinfo? _selectedMusic;
   Map<String, bool> _downloading = {};
+  final AudioPlayer _audioPlayer = AudioPlayer();
+  bool _isPlaying = false;
+  Duration _duration = Duration.zero;
+  Duration _position = Duration.zero;
 
   List<Musicinfo> get musicInfos => _musicInfos;
   Musicinfo? get selectedMusic => _selectedMusic;
   Map<String, bool> get downloading => _downloading;
+  bool get isPlaying => _isPlaying;
+  Duration get duration => _duration;
+  Duration get position => _position;
+  AudioPlayer get audioPlayer => _audioPlayer;
+
+  MusicProvider() {
+    _audioPlayer.onDurationChanged.listen((d) {
+      _duration = d;
+      notifyListeners();
+    });
+
+    _audioPlayer.onPositionChanged.listen((p) {
+      _position = p;
+      notifyListeners();
+    });
+
+    _audioPlayer.onPlayerStateChanged.listen((state) {
+      _isPlaying = state == PlayerState.playing;
+      notifyListeners();
+    });
+  }
 
   void setMusicInfos(List<Musicinfo> musicInfos) {
     _musicInfos = musicInfos;
@@ -22,7 +48,9 @@ class MusicProvider with ChangeNotifier {
 
     String? path = await _downloadMusic(context, musicInfo);
     if (path != null) {
-      // 播放音乐的逻辑
+      _isPlaying = true;
+      notifyListeners();
+      await _audioPlayer.play(DeviceFileSource(path));
     }
   }
 
@@ -56,5 +84,17 @@ class MusicProvider with ChangeNotifier {
       );
     }
     return path;
+  }
+
+  Future<void> stop() async {
+    await _audioPlayer.stop();
+    _isPlaying = false;
+    notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _audioPlayer.dispose();
+    super.dispose();
   }
 }
