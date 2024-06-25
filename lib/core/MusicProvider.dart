@@ -9,16 +9,18 @@ class MusicProvider with ChangeNotifier {
   Map<String, bool> _downloading = {};
   final AudioPlayer _audioPlayer = AudioPlayer();
   bool _isPlaying = false;
+  PlayerState _state = PlayerState.stopped;
+
   Duration _duration = Duration.zero;
   Duration _position = Duration.zero;
 
   List<Musicinfo> get musicInfos => _musicInfos;
   Musicinfo? get selectedMusic => _selectedMusic;
   Map<String, bool> get downloading => _downloading;
-  bool get isPlaying => _isPlaying;
   Duration get duration => _duration;
   Duration get position => _position;
   AudioPlayer get audioPlayer => _audioPlayer;
+  PlayerState get state => _state;
 
   MusicProvider() {
     _audioPlayer.onDurationChanged.listen((d) {
@@ -32,7 +34,7 @@ class MusicProvider with ChangeNotifier {
     });
 
     _audioPlayer.onPlayerStateChanged.listen((state) {
-      _isPlaying = state == PlayerState.playing;
+      _state = state;
       notifyListeners();
     });
   }
@@ -90,6 +92,14 @@ class MusicProvider with ChangeNotifier {
     await _audioPlayer.stop();
     _isPlaying = false;
     notifyListeners();
+  }
+
+  Future<void> pause() async {
+    await _audioPlayer.pause();
+  }
+
+  Future<void> resume() async {
+    await _audioPlayer.resume();
   }
 
   @override

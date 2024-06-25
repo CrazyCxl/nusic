@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../base/musicinfo.dart';
@@ -29,32 +30,31 @@ class _MusicPlayPageState extends State<MusicPlayPage> {
                   background: Stack(
                     fit: StackFit.expand,
                     children: <Widget>[
-                      Positioned.fill(
-                        child: Image.network(
-                          'https://via.placeholder.com/400x200',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
                       Positioned(
                         bottom: 60.0,
                         left: 20.0,
                         child: FloatingActionButton(
                           backgroundColor: Color.fromARGB(62, 156, 181, 236),
                           onPressed: () {
-                            if (musicProvider.isPlaying) {
-                              musicProvider.stop();
-                            } else if (selectedMusic != null) {
-                              musicProvider.play(context, selectedMusic);
+                            switch (musicProvider.state) {
+                              case PlayerState.playing:
+                                musicProvider.pause();
+                                break;
+                              case PlayerState.paused:
+                                musicProvider.resume();
+                                break;
+                              default:
                             }
                           },
                           child: Icon(
-                            musicProvider.isPlaying
+                            musicProvider.state == PlayerState.playing
                                 ? Icons.pause
                                 : Icons.play_arrow,
                           ),
                         ),
                       ),
-                      if (musicProvider.isPlaying)
+                      if (musicProvider.state == PlayerState.playing ||
+                          musicProvider.state == PlayerState.paused)
                         Positioned(
                           bottom: 0,
                           left: 0,
@@ -87,9 +87,6 @@ class _MusicPlayPageState extends State<MusicPlayPage> {
                         musicProvider.downloading[musicInfo.name] ?? false;
 
                     return ListTile(
-                      leading: CircleAvatar(
-                        child: Text((index + 1).toString()),
-                      ),
                       title: Text(musicInfo.name),
                       subtitle: Text(musicInfo.artist),
                       selected: isSelected,
