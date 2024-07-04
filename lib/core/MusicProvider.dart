@@ -44,6 +44,20 @@ class MusicProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // 根据当前音乐信息找到下一首音乐信息
+  Musicinfo? _findNextMusicInfo(Musicinfo currentMusicInfo) {
+    int currentIndex =
+        _musicInfos.indexWhere((music) => music == currentMusicInfo);
+    int nextIndex = currentIndex + 1;
+
+    if (nextIndex < _musicInfos.length) {
+      return _musicInfos[nextIndex];
+    } else {
+      // 如果已经是最后一首，则返回第一首音乐信息作为循环
+      return null;
+    }
+  }
+
   Future<void> play(BuildContext context, Musicinfo musicInfo) async {
     _selectedMusic = musicInfo;
     notifyListeners();
@@ -52,7 +66,15 @@ class MusicProvider with ChangeNotifier {
     if (path != null) {
       _isPlaying = true;
       notifyListeners();
-      await _audioPlayer.play(DeviceFileSource(path));
+      var play_future = _audioPlayer.play(DeviceFileSource(path));
+      Musicinfo? next_music_info = _findNextMusicInfo(musicInfo);
+      if (next_music_info != null) {
+        print('Next Music: ${next_music_info.name}');
+        var download_future = _downloadMusic(context, next_music_info);
+        await Future.wait([play_future, download_future]);
+      } else {
+        await Future.wait([play_future]);
+      }
     }
   }
 
