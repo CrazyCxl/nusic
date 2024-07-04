@@ -59,8 +59,8 @@ class _MusicListPageState extends State<MusicListPage> {
                             onTap: () async {
                               DefaultTabController.of(context)
                                   ?.animateTo(2); // Switch to MusicPlayPage
-                              await musicProvider.play(
-                                  context, musicProvider.musicInfos[index]);
+                              musicProvider
+                                  .play(musicProvider.musicInfos[index]);
                             },
                           ),
                         );

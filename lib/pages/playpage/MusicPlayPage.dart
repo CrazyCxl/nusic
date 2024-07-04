@@ -93,8 +93,8 @@ class _MusicPlayPageState extends State<MusicPlayPage> {
                       selectedTileColor: Colors.blue.withOpacity(0.1),
                       trailing:
                           isDownloading ? CircularProgressIndicator() : null,
-                      onTap: () async {
-                        await musicProvider.play(context, musicInfo);
+                      onTap: () {
+                        musicProvider.play(musicInfo);
                       },
                     );
                   },

@@ -6,6 +6,7 @@ import '../core/MusicDownloader.dart';
 class MusicProvider with ChangeNotifier {
   List<Musicinfo> _musicInfos = [];
   Musicinfo? _selectedMusic;
+  Musicinfo? _nextMusic;
   Map<String, bool> _downloading = {};
   final AudioPlayer _audioPlayer = AudioPlayer();
   bool _isPlaying = false;
@@ -36,6 +37,9 @@ class MusicProvider with ChangeNotifier {
     _audioPlayer.onPlayerStateChanged.listen((state) {
       _state = state;
       notifyListeners();
+      if (state == PlayerState.completed && _isPlaying) {
+        play(_nextMusic!);
+      }
     });
   }
 
@@ -58,28 +62,29 @@ class MusicProvider with ChangeNotifier {
     }
   }
 
-  Future<void> play(BuildContext context, Musicinfo musicInfo) async {
+  play(Musicinfo musicInfo) async {
     _selectedMusic = musicInfo;
     notifyListeners();
 
-    String? path = await _downloadMusic(context, musicInfo);
+    String? path = await _downloadMusic(musicInfo);
     if (path != null) {
       _isPlaying = true;
       notifyListeners();
       var play_future = _audioPlayer.play(DeviceFileSource(path));
-      Musicinfo? next_music_info = _findNextMusicInfo(musicInfo);
-      if (next_music_info != null) {
-        print('Next Music: ${next_music_info.name}');
-        var download_future = _downloadMusic(context, next_music_info);
+      _nextMusic = _findNextMusicInfo(musicInfo);
+      if (_nextMusic != null) {
+        print('Next Music: ${_nextMusic!.name}');
+        var download_future = _downloadMusic(_nextMusic!);
         await Future.wait([play_future, download_future]);
       } else {
         await Future.wait([play_future]);
       }
+    } else {
+      print('download path null ${musicInfo.name}');
     }
   }
 
-  Future<String?> _downloadMusic(
-      BuildContext context, Musicinfo musicInfo) async {
+  Future<String?> _downloadMusic(Musicinfo musicInfo) async {
     _downloading[musicInfo.name] = true;
     notifyListeners();
 
@@ -89,23 +94,7 @@ class MusicProvider with ChangeNotifier {
     notifyListeners();
 
     if (path == null) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('下载失败'),
-            content: Text('无法下载 ${musicInfo.name}。请重试。'),
-            actions: <Widget>[
-              TextButton(
-                child: Text('确定'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
+      print('download failed ${musicInfo.name}');
     }
     return path;
   }
